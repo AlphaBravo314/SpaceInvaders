@@ -1,6 +1,7 @@
 package com.ngse.spaceinvaders.screens;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import com.ngse.spaceinvaders.gameobjects.PlayerBullet;
 import com.ngse.spaceinvaders.gameobjects.Upgrade;
 import com.ngse.spaceinvaders.handlers.BulletCollisionsHandler;
 import com.ngse.spaceinvaders.resources.images.BufferedImageResource;
+import com.ngse.spaceinvaders.resources.sounds.Mp3Player;
 
 public class GameScreen extends Screen {
 
@@ -44,6 +46,8 @@ public class GameScreen extends Screen {
 
 	// AlienSystemAI for this game
 	public AlienSystemAI ASAI;
+
+	public int life;
 
 	// GameState
 	private enum GameState {
@@ -74,6 +78,39 @@ public class GameScreen extends Screen {
 
 		// Initialize AI's
 		this.ASAI = new AlienSystemAI(this);
+		
+		// Player's life
+		life = Config.PLAYER_START_HEALTH;
+		
+		// Initialize score
+		this.score = 0;
+	}
+	
+	public void init() {
+		this.GameClock = 0;
+		// Initialize the GameState
+		this.gameState = GameState.RUNNING;
+		// Initialize the player
+		this.player = new Player(0, 0, 0, 0, BufferedImageResource.Spaceship);
+		this.player.setX(SpaceInvadersGame.frame.getWidth() / 2
+				- player.getImage().getWidth() / 2);
+		this.player.setY(SpaceInvadersGame.frame.getHeight() / 2
+				- player.getImage().getHeight() / 2);
+		// Initialize other GameObjects
+		this.playerBullets = new LinkedList<PlayerBullet>();
+		this.aliens = new LinkedList<Alien>();
+		this.alienBullets = new LinkedList<AlienBullet>();
+		this.alienBoss = null;
+		this.upgrades = new LinkedList<Upgrade>();
+
+		// Initialize AI's
+		this.ASAI = new AlienSystemAI(this);
+		
+		// Initialize score
+		this.score = 0;
+
+		
+
 	}
 
 	/*
@@ -114,13 +151,14 @@ public class GameScreen extends Screen {
 
 			// Print level title
 			if (GameClock >= 0 && GameClock < 500) {
-				System.out.println("Printing level 1");
+				// System.out.println("Printing level 1");
 				paintString(g2, "Level 1");
 			} else if (GameClock >= 1300 && GameClock < 1500) {
 				paintString(g2, "Level 2");
 			} else if (GameClock >= 2300 && GameClock < 2500) {
 				paintString(g2, "Level 3");
 			}
+
 		} else { // if paused
 			BufferedImage pausepopup = BufferedImageResource.PausePopup;
 			g2.drawImage(pausepopup, null,
@@ -129,56 +167,54 @@ public class GameScreen extends Screen {
 		}
 	}
 
-	private void drawPlayerUI(Graphics2D g2) { //XXX check if string placement works
-		g2.drawString("Score: " + String.valueOf(score), 50, 50);
-		g2.drawString("Level: " + String.valueOf(Level), 50, 100);
-		g2.drawString("Weapon: " + player.playerweapon.getWeaponName(), 50, 150);
-		
-		
-		int width = 50;
-		int height = 50;
-		
+	private void drawPlayerUI(Graphics2D g2) { // XXX check if string placement
+		g2.setColor(Color.WHITE); // works
+		g2.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+		g2.drawString("Score: " + String.valueOf(score), 10, 20);
+		g2.drawString("Level: " + String.valueOf(Level), 10, 40);
+		g2.drawString("Weapon: " + player.playerweapon.getWeaponName(), 10, 60);
+
+		int width = 20;
+		int height = 20;
+
 		if (BufferedImageResource.FullHealth != null) {
 			height = BufferedImageResource.FullHealth.getHeight();
 			width = BufferedImageResource.FullHealth.getWidth();
 		}
-		
+
 		for (int i = 1; i <= Config.PLAYER_START_HEALTH; i++)
 			if (i <= player.getHealth()) {
 				if (BufferedImageResource.FullHealth != null) {
-					g2.drawImage(BufferedImageResource.FullHealth
-							, SpaceInvadersGame.frame.getWidth() - 50 - width * Config.PLAYER_START_HEALTH + width * i
-							, 50
-							, null);
-				}
-				else {
+					g2.drawImage(BufferedImageResource.FullHealth,
+							SpaceInvadersGame.frame.getWidth() - 50 - width
+									* Config.PLAYER_START_HEALTH + width * i,
+							50, null);
+				} else {
 					g2.setColor(Color.RED);
-					g2.drawOval(SpaceInvadersGame.frame.getWidth() - 50 - width * Config.PLAYER_START_HEALTH + width * i
-							, 50
-							, width
-							, height);
+					g2.fillOval(SpaceInvadersGame.frame.getWidth() - 50 - width
+							* Config.PLAYER_START_HEALTH + width * i, 50,
+							width, height);
 				}
-			}
-			else {
+			} else {
 				if (BufferedImageResource.LostHealth != null) {
-					g2.drawImage(BufferedImageResource.LostHealth
-							, SpaceInvadersGame.frame.getWidth() - 50 - width * Config.PLAYER_START_HEALTH + width * i
-							, 50
-							, null);
-				}
-				else {
+					g2.drawImage(BufferedImageResource.LostHealth,
+							SpaceInvadersGame.frame.getWidth() - 50 - width
+									* Config.PLAYER_START_HEALTH + width * i,
+							50, null);
+				} else {
 					g2.setColor(Color.GRAY);
-					g2.drawOval(SpaceInvadersGame.frame.getWidth() - 50 - width * Config.PLAYER_START_HEALTH + width * i
-							, 50
-							, width
-							, height);
+					g2.drawOval(SpaceInvadersGame.frame.getWidth() - 50 - width
+							* Config.PLAYER_START_HEALTH + width * i, 50,
+							width, height);
 				}
 			}
-		
+
 	}
 
 	private void paintString(Graphics2D g2, String string) {
-		g2.drawString(string, 100, 200);
+		g2.setColor(Color.WHITE);
+		g2.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+		g2.drawString(string, 200, 200);
 	}
 
 	/*
@@ -201,15 +237,16 @@ public class GameScreen extends Screen {
 		case KeyEvent.VK_ESCAPE:
 			if (gameState.equals(GameState.RUNNING)) {
 				pauseGame();
-			} else if (gameState.equals(GameState.PAUSE)) {
-				SpaceInvadersGame.setScreen(new StartScreen());
-			}
-			break;
+			} 
 		case KeyEvent.VK_ENTER:
 			if (gameState.equals(GameState.PAUSE)) {
 				resumeGame();
 			}
 			break;
+		case KeyEvent.VK_Q:
+			if (gameState.equals(GameState.PAUSE)) {
+				SpaceInvadersGame.setScreen(SpaceInvadersGame.startScreen);
+			}
 		}
 		// If Running Gamestate:
 		if (gameState.equals(GameState.RUNNING)) {
@@ -307,6 +344,18 @@ public class GameScreen extends Screen {
 		}
 
 		ASAI.update();
+
+		// Check if the game is over (life is 0)
+		if (this.life <= 0) {
+			gameOver();
+		}
+	}
+
+	/*
+	 * Remove objects methods
+	 */
+	private void gameOver() {
+		SpaceInvadersGame.setScreen(SpaceInvadersGame.gameOverScreen);
 	}
 
 	public void remove(PlayerBullet object) {

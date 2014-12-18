@@ -114,12 +114,12 @@ public class StartScreen extends Screen {
 		case 1:
 			// switch to gamescreen
 			System.out.println("Trying to switch to gamescreen");
-			SpaceInvadersGame.setScreen(new GameScreen());
+			SpaceInvadersGame.setScreen(SpaceInvadersGame.gameScreen);
 			break;
 		case 2:
 			// switch to optionsscreen
 			System.out.println("Trying to switch to optionsscreen");
-			SpaceInvadersGame.setScreen(new OptionsScreen());
+			SpaceInvadersGame.setScreen(SpaceInvadersGame.optionScreen);
 			break;
 		case 3:
 			// quit

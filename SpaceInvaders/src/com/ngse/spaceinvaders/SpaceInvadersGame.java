@@ -2,12 +2,15 @@ package com.ngse.spaceinvaders;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import com.ngse.spaceinvaders.resources.images.BufferedImageResource;
 import com.ngse.spaceinvaders.resources.sounds.AudioStreamResource;
+import com.ngse.spaceinvaders.screens.GameOverScreen;
 import com.ngse.spaceinvaders.screens.GameScreen;
 import com.ngse.spaceinvaders.screens.OptionsScreen;
 import com.ngse.spaceinvaders.screens.Screen;
@@ -21,6 +24,9 @@ public class SpaceInvadersGame {
 	public static GameScreen gameScreen;
 	public static OptionsScreen optionScreen;
 	public static StartScreen startScreen;
+	public static GameOverScreen gameOverScreen;
+
+	public static ExecutorService threadPool;
 
 	public static void main(String[] args) {
 		// initFrame
@@ -39,9 +45,13 @@ public class SpaceInvadersGame {
 		gameScreen = new GameScreen();
 		optionScreen = new OptionsScreen();
 		startScreen = new StartScreen();
+		gameOverScreen = new GameOverScreen();
 
 		// Start Screen of game
 		setScreen(startScreen);
+
+		// initThreadPool
+		threadPool = Executors.newFixedThreadPool(200);
 
 		timer.start();
 		frame.setVisible(true);
@@ -67,7 +77,7 @@ public class SpaceInvadersGame {
 		}
 		// Stop timer
 		if (timer.isRunning()) {
-			log("timer isRunning, so stopping in order to reset");
+			// log("timer isRunning, so stopping in order to reset");
 			timer.stop();
 		}
 		frame.getContentPane().removeAll();
@@ -75,21 +85,25 @@ public class SpaceInvadersGame {
 		/*
 		 * Add Screen stuff to SpaceInvadersGame JPanel
 		 */
+		
+		//reset score for GameScreen
+		if (screen == gameScreen)
+			((GameScreen) screen).init();
 
 		// Set the screen
 		frame.getContentPane().add(screen);
-		log("Added screen: " + screen.toString());
+		// log("Added screen: " + screen.toString());
 		frame.addKeyListener(screen);
-		log("Added keylistener: " + screen.toString());
+		// log("Added keylistener: " + screen.toString());
 		// Add screen as ActionListener
 		timer.addActionListener(screen);
-		log("Added " + screen.toString() + " as an actionlistener");
+		// log("Added " + screen.toString() + " as an actionlistener");
 		timer.start();
-		log("Started timer, timer isRunning: " + timer.isRunning());
+		// log("Started timer, timer isRunning: " + timer.isRunning());
 
 		// Revalidating
 		frame.getContentPane().revalidate();
-		log("Revalidated!");
+		// log("Revalidated!");
 	}
 
 	/*
@@ -97,6 +111,10 @@ public class SpaceInvadersGame {
 	 */
 	public static void log(String str) {
 		System.out.println(str);
+	}
+
+	public static void endProgram() {
+		System.exit(0);
 	}
 
 }

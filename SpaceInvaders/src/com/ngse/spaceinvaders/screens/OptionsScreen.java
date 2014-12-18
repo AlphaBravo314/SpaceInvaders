@@ -125,7 +125,7 @@ public class OptionsScreen extends Screen {
 			break;
 		case 4:
 			// go back to Start Screen
-			SpaceInvadersGame.setScreen(new StartScreen());
+			SpaceInvadersGame.setScreen(SpaceInvadersGame.startScreen);
 			break;
 		}
 

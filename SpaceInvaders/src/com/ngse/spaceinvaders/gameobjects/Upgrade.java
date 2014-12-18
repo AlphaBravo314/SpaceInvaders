@@ -1,14 +1,16 @@
 package com.ngse.spaceinvaders.gameobjects;
 
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import com.ngse.spaceinvaders.Config;
+import com.ngse.spaceinvaders.SpaceInvadersGame;
 
 public class Upgrade extends GameObject {
 	
+	
+	//hi
 	private double speed;
 	private double l; //l = length
 	private Random rand = new Random();
@@ -25,6 +27,8 @@ public class Upgrade extends GameObject {
 		this.speed = speed;
 		
 	}
+	
+	
 	
 	public Upgrade(BufferedImage image){
 		
@@ -65,9 +69,18 @@ public class Upgrade extends GameObject {
     }
     
     public void checkPlayer(){
-        //TODO
-        //getHitbox()
-        
+    	
+    	
+    	Player player = SpaceInvadersGame.gameScreen.player;
+    	PlayerWeapon weapon = SpaceInvadersGame.gameScreen.player.playerweapon;
+    	
+    	if(this.getHitbox().intersects(player.getHitbox())){
+    		
+    		weapon.upgrade();
+    		this.despawn();
+    		
+    	}
+    	
     }
 	
 	
