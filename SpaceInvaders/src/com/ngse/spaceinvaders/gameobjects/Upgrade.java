@@ -1,25 +1,21 @@
 package com.ngse.spaceinvaders.gameobjects;
 
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import com.ngse.spaceinvaders.Config;
 import com.ngse.spaceinvaders.SpaceInvadersGame;
+import com.ngse.spaceinvaders.resources.images.BufferedImageResource;
 
 public class Upgrade extends GameObject {
 	
-	
-	//hi
 	private double speed;
 	private double l; //l = length
 	private Random rand = new Random();
 	
-	public Upgrade(double x, double y, double dx, double dy, double speed,
-			BufferedImage image) {
+	public Upgrade(double x, double y, double dx, double dy, double speed) {
 		
-		
-		super(x, y, dx, dy, image);
+		super(x, y, dx, dy, BufferedImageResource.powerupBox);
 		
 		this.x = x;
 		this.y = y;
@@ -30,10 +26,10 @@ public class Upgrade extends GameObject {
 	
 	
 	
-	public Upgrade(BufferedImage image){
+	public Upgrade(){
 		
 		
-		super(0,0,0,0,image);
+		super(0,0,0,0,BufferedImageResource.powerupBox);
 		
 		x = rand.nextInt(  (  Config.FRAME_WIDTH   )  -20  ) +10;
 		y = rand.nextInt(  (  Config.FRAME_HEIGHT  )  -20  ) +10;
@@ -50,11 +46,12 @@ public class Upgrade extends GameObject {
 	public void moveUpdate() {
 		x += dx * (speed);
         y += dy * (speed);
+        checkPlayer();
 	}
 	
 	
 	public Rectangle2D.Double getBox(){
-        l = 5;
+        l = 10;
         return new Rectangle2D.Double(x-(l/2), y-(l/2), l, l);
     }
     

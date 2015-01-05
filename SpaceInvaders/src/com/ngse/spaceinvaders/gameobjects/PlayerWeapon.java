@@ -5,13 +5,6 @@ import com.ngse.spaceinvaders.SpaceInvadersGame;
 import com.ngse.spaceinvaders.resources.sounds.Mp3Player;
 import com.ngse.spaceinvaders.screens.GameScreen;
 
-//this class is intended to be included in the Player class
-//fire() will create new bullets and return a PlayerBullet[]
-//, which is intended to be passed up to wherever the list of PlayerBullets is
-//upgrade() and downgrade() will raise and lower the weapon's level respectively
-//setMinumum() will reset the weapon to its weakest level and setMaximum() will set it to the strongest level
-//getWeaponType() and setWeaponType() will return and set the weapon's current type, respectively
-
 public class PlayerWeapon {
 
 	// defines the number values of each weapon type

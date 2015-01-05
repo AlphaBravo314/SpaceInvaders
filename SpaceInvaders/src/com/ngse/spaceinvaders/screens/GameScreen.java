@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import com.ngse.spaceinvaders.Config;
 import com.ngse.spaceinvaders.SpaceInvadersGame;
 import com.ngse.spaceinvaders.ai.AlienSystemAI;
@@ -24,7 +23,6 @@ import com.ngse.spaceinvaders.gameobjects.PlayerBullet;
 import com.ngse.spaceinvaders.gameobjects.Upgrade;
 import com.ngse.spaceinvaders.handlers.BulletCollisionsHandler;
 import com.ngse.spaceinvaders.resources.images.BufferedImageResource;
-import com.ngse.spaceinvaders.resources.sounds.Mp3Player;
 
 public class GameScreen extends Screen {
 
@@ -129,7 +127,6 @@ public class GameScreen extends Screen {
 			/*
 			 * Draw the gameobjects
 			 */
-			this.drawPlayerUI(g2);
 			player.draw(g2);
 			for (PlayerBullet pb : playerBullets) {
 				if (!pb.equals(null))
@@ -139,6 +136,12 @@ public class GameScreen extends Screen {
 				if (!a.equals(null))
 					a.draw(g2);
 			}
+			
+			for (Upgrade up : upgrades) {
+				if (!up.equals(null))
+					up.draw(g2);
+			}
+			
 			for (AlienBullet ab : alienBullets) {
 				if (!ab.equals(null))
 					ab.draw(g2);
@@ -166,6 +169,9 @@ public class GameScreen extends Screen {
 					(int) this.getWidth() - pausepopup.getWidth() * 2,
 					(int) this.getHeight() - pausepopup.getHeight() * 2);
 		}
+
+		// Draw the Player's UI:
+		this.drawPlayerUI(g2);
 	}
 
 	private void drawPlayerUI(Graphics2D g2) { // XXX check if string placement
@@ -382,10 +388,10 @@ public class GameScreen extends Screen {
 	public void endGame() {
 		SpaceInvadersGame.log("Ending game...");
 	}
-	
+
 	public void addScore(int addition) {
 		score += addition;
-		
+
 	}
 
 }
