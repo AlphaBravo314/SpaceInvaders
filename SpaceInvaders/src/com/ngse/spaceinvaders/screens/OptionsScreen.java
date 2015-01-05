@@ -128,7 +128,6 @@ public class OptionsScreen extends Screen {
 			SpaceInvadersGame.setScreen(SpaceInvadersGame.startScreen);
 			break;
 		}
-
 	}
 
 	@Override

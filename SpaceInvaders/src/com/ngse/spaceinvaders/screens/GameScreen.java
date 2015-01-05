@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import com.ngse.spaceinvaders.Config;
 import com.ngse.spaceinvaders.SpaceInvadersGame;
 import com.ngse.spaceinvaders.ai.AlienSystemAI;
